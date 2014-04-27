@@ -20,14 +20,19 @@
     <ol class="breadcrumb">
       <li class="active">Books</li>
     </ol>
+    {{render 'books' this}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="books">
     {{#each}}
       {{book-details book=this tag='div' class='row book'}}
     {{/each}}
   </script>
 
+
   <script type="text/x-handlebars" data-template-name="book">
     <ol class="breadcrumb">
-      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li>{{#link-to 'books'}}Books{{/link-to}}</li>
       <li class="active">{{title}}</li>
     </ol>
     {{book-details book=this tag='div' class='row book'}}
@@ -35,15 +40,15 @@
 
   <script type="text/x-handlebars" data-template-name="components/book-details">
     <div class='cover pull-left'>
-      <a {{bind-attr href ='url'}}>
-        <img {{bind-attr src='image'}}>
+      <a {{bind-attr href ='book.url'}}>
+        <img {{bind-attr src='book.image'}}>
       </a>
-      <p class="text-center rating"><strong>{{rating}}</strong>/5</p>
+      <p class="text-center rating"><strong>{{book.rating}}</strong>/5</p>
     </div>
     <div class'details'>
-      <h3>{{title}}</h3>
-      <p class="text-muted"><em>By {{author}}</em></p>
-      <p>{{description}}</p>
+      <h3>{{#link-to 'book' book}}{{book.title}}{{/link-to}}</h3>
+      <p class="text-muted"><em>By {{book.author}}</em></p>
+      <p>{{book.description}}</p>
     </div>
   </script>
 

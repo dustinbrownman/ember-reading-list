@@ -3,7 +3,8 @@ App = Ember.Application.create();
 // Router
 App.Router.map(function() {
   this.route('index', { path: '/'});
-  this.resource('book', { path: '/books/:id' });
+  this.resource('books', { path: '/books' });
+  this.resource('book',  { path: '/books/:id' });
 });
 
 // Routes
@@ -13,10 +14,21 @@ App.IndexRoute = Ember.Route.extend({
   }
 });
 
+App.BooksRoute = Ember.Route.extend({
+	model: function() {
+		return this.store.find('book');
+	}
+})
+
 App.BookRoute = Ember.Route.extend({
 	model: function(params) {
 		return this.store.find('book', params.id);
 	}
+});
+
+// Controllers
+App.BooksController = Ember.ArrayController.extend({
+	sortProperites: ['title'],
 });
 
 // DataStore
