@@ -1,5 +1,5 @@
 .cover {
-	padding: 20px;
+	margin: 20px;
 }
 
 .cover img {
@@ -7,5 +7,9 @@
 }
 
 .details {
-	padding: 20px;
+	margin: 20px;
+}
+
+.genre-label {
+	margin: 0 10px;
 }
