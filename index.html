@@ -19,23 +19,97 @@
   <script type="text/x-handlebars" data-template-name="index">
     <ol class="breadcrumb">
       <li class="active">Books</li>
+      <li>
+        {{#link-to 'books.new'}}
+          add a book
+        {{/link-to}}
+      </li>
     </ol>
-    {{render 'books' this}}
+    <div class="col-md-8 books">
+      {{render 'books' books }}
+    </div>
+    <div class="col-md-4 genres">
+      {{render 'genres' genres}}
+    </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="books">
+    {{outlet}}
     {{#each}}
       {{book-details book=this tag='div' class='row book'}}
+    {{else}}
+      <p class="lead"><em>Sorry, there are no books here.</em></p>
     {{/each}}
   </script>
 
+  <script type="text/x-handlebars" data-template-name="genres">
+    <h2>Genres</h2>
+    <ul class="list-unstyled">
+      {{#each}}
+        <li>{{#link-to 'genre' this class="label label-primary"}}{{name}}{{/link-to}}</li>
+      {{/each}}
+    </ul>
+  </script>
 
   <script type="text/x-handlebars" data-template-name="book">
     <ol class="breadcrumb">
-      <li>{{#link-to 'books'}}Books{{/link-to}}</li>
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
       <li class="active">{{title}}</li>
     </ol>
     {{book-details book=this tag='div' class='row book'}}
+  </script>
+
+  <script type="text/x-handlebars" data-template-name="books/new">
+    <ol class="breadcrumb">
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class="active">New</li>
+    </ol>
+    <h2>{{title}}</h2>
+    <div class="row">
+      <form class="form-horizontal" role="form">
+        <div class="form-group">
+          <label for="book_title" class="col-sm-2 control-label">Title</label>
+          <div class="col-sm-9">
+            {{input class="form-control" id="book_title" placeholder="Book Title" valueBinding="title"}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book_author" class="col-sm-2 control-label">Author</label>
+          <div class="col-sm-9">
+            {{input class="form-control" id="book_author" placeholder="Book author" valueBinding="author"}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book_title" class="col-sm-2 control-label">Book Description</label>
+          <div class="col-sm-9">
+            {{textarea class="form-control" id="book_description" placeholder="Book Title" valueBinding="description"}}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book_rating" class="col-sm-2 control-label">Rating</label>
+          <div class="col-sm-9">
+            {{ view Ember.Select content=ratings valueBinding="rating" class="form-control" id="book_rating" }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book_rating" class="col-sm-2 control-label">Genre</label>
+          <div class="col-sm-9">
+            {{ view Ember.Select content=genres optionLabelPath="content.name" valueBinding="genre" class="form-control" id="book_genre" }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="book_amazon_id" class="col-sm-2 control-label">Amazon ID</label>
+          <div class="col-sm-9">
+            {{input class="form-control" id="book_amazon_id" valueBinding="amazon_id" }}
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2">
+            <button type="submit" class="btn btn-default" {{ action 'createBook' }}>Create Book</button>
+          </div>
+        </div>
+      </form>
+    </div>
   </script>
 
   <script type="text/x-handlebars" data-template-name="components/book-details">
@@ -43,14 +117,32 @@
       <a {{bind-attr href ='book.url'}}>
         <img {{bind-attr src='book.image'}}>
       </a>
-      <p class="text-center rating"><strong>{{book.rating}}</strong>/5</p>
+      {{#if book.rating}}
+        <p class="text-center rating"><strong>{{book.rating}}</strong>/5</p>
+      {{/if}}
     </div>
     <div class'details'>
       <h3>{{#link-to 'book' book}}{{book.title}}{{/link-to}}</h3>
-      <p class="text-muted"><em>By {{book.author}}</em></p>
+      <p class="text-muted">
+        <em>By {{book.author}}</em>
+        {{#if book.genre}}
+          <span class="genre-label">
+            {{#link-to 'genre' book.genre class="label label-primary"}}{{book.genre.name}}{{/link-to}}
+          </span>
+        {{/if}}
+      </p>
       <p>{{book.description}}</p>
     </div>
   </script>
+
+  <script type="text/x-handlebars" data-template-name="genre">
+    <ol class="breadcrumb">
+      <li>{{#link-to 'index'}}Books{{/link-to}}</li>
+      <li class="active">{{name}}</li>
+    </ol>
+    <h2>{{name}}</h2>
+    {{render 'books' books}}
+  </script>  
 
   <script src="js/libs/jquery-1.10.2.js"></script>
   <script src="js/libs/handlebars-1.1.2.js"></script>
